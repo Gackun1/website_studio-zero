@@ -4,10 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/swiper/swiper-bundle.min.css"
-    />
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <link rel="stylesheet" href="css/style.css" />
     <script src="js/index.js"></script>
@@ -24,16 +21,31 @@
           <li class="list__item"><a href="">Contact</a></li>
         </ul>
       </nav>
+
+      <!-- hamburger menu -->
+      <nav id="hamburger_nav">
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Gallary</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      <div id="hamburger_button" class="hamburger_button_close">
+        <span class="hamburger_line" id="line1"></span>
+        <span class="hamburger_line" id="line2"></span>
+        <span class="hamburger_line" id="line3"></span>
+      </div>
+      <!-- hamburger menu end -->
     </header>
     <main>
       <section class="sec-kv">
         <h1 class="ttl">実験空間<br />Studio Zero</h1>
         <div class="circle"></div>
 
+        <!-- circle triming slide -->
         <div class="slide-box trim-slide">
           <div class="swiper-container">
             <div class="swiper-wrapper">
-              <!-- slides -->
               <div class="swiper-slide">
                 <img src="images/mask26.jpg" alt="" class="filter-img" />
               </div>
@@ -46,12 +58,13 @@
             </div>
           </div>
         </div>
+        <!-- circle triming slide end -->
 
+        <!-- background slide -->
         <div class="scroll"><a href="" id="scroll-anchor">scroll</a></div>
         <div class="slide-box">
           <div class="swiper-container">
             <div class="swiper-wrapper">
-              <!-- slides -->
               <div class="swiper-slide">
                 <img src="images/mask26.jpg" alt="" />
               </div>
@@ -65,6 +78,7 @@
             <!-- <div class="swiper-pagination"></div> -->
           </div>
         </div>
+        <!-- background slide end -->
       </section>
 
       <section class="sec-main">
@@ -73,9 +87,7 @@
             <div class="inner">
               <h2 class="ttl"><span class="ttl__number">01</span>About</h2>
               <div class="text-box">
-                <h3 class="ttl">
-                  地方の街角からだって、<br />何かを発信したい。
-                </h3>
+                <h3 class="ttl">地方の街角からだって、<br />何かを発信したい。</h3>
                 <p>
                   モノづくりを通した街づくりへの挑戦。<br />
                   Studio Zero は17年間に渡り、<br />
@@ -158,15 +170,7 @@
           <div class="item"></div>
           <div class="item"></div>
           <div class="item"></div>
-          <div class="item item-ttl2"></div>
-        </div>
-
-        <div class="container container-2">
-          <div class="item"></div>
-          <div class="item"></div>
-          <div class="item"></div>
-          <div class="item"></div>
-          <div class="item"></div>
+          <div class="item item-ttl2 sp-order"></div>
         </div>
 
         <div class="container container-2">
@@ -204,6 +208,22 @@
           el: ".swiper-pagination",
           clickable: true,
         },
+        allowTouchMove: false,
+      });
+
+      //hamburger
+      document.addEventListener("DOMContentLoaded", () => {
+        const hamburger = () => {
+          document.getElementById("line1").classList.toggle("line1_active");
+          document.getElementById("line2").classList.toggle("line2_active");
+          document.getElementById("line3").classList.toggle("line3_active");
+          document.getElementById("hamburger_nav").classList.toggle("hamburger_nav_active");
+          document.getElementById("hamburger_button").classList.toggle("hamburger_button_open");
+          document.getElementById("hamburger_button").classList.toggle("hamburger_button_close");
+        };
+        document.getElementById("hamburger_button").addEventListener("click", () => {
+          hamburger();
+        });
       });
     </script>
   </body>
