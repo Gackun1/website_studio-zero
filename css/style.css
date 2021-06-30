@@ -488,7 +488,7 @@ a {
 }
 
 .container .item__img-box:hover .item__img-box__img {
-  opacity: 0.5;
+  opacity: 0.3;
   -webkit-transition: 0.3s;
   transition: 0.3s;
 }
@@ -562,12 +562,32 @@ a {
 }
 
 .container .item-ttl2 .inner .text-box .text {
-  margin: 20px 0;
+  margin: 50px 0;
   font-size: 1.5rem;
 }
 
 .container .item-ttl2 .inner .btn-more a {
   font-size: 1.4rem;
+  color: #666666;
+}
+
+.container .item-ttl2 .inner .btn-more .event-none {
+  pointer-events: none;
+  position: relative;
+}
+
+.container .item-ttl2 .inner .btn-more .event-none:after {
+  content: "";
+  position: absolute;
+  bottom: calc(50% - 2px);
+  left: -5px;
+  padding: 0 5px 0 10px;
+  border-bottom: solid 1px #666666;
+}
+
+.container .item-ttl2 .inner .btn-more .event-none:before {
+  width: 0;
+  height: 0;
 }
 
 .container .gallery-box {
@@ -578,11 +598,18 @@ a {
   background-repeat: no-repeat;
 }
 
+@media screen and (max-width: 1280px) {
+  .container .item-ttl2 .inner .text-box .text {
+    margin: 30px 0;
+    font-size: 1.5rem;
+  }
+}
+
 @media screen and (max-width: 960px) {
   .container .item-ttl2 .inner {
-    padding: 15px;
-    width: calc(100% - 28px);
-    height: calc(100% - 28px);
+    padding: 30px;
+    width: calc(100% - 58px);
+    height: calc(100% - 58px);
   }
   .container .item-ttl2 .inner .ttl {
     font-size: 2.5rem;
@@ -600,9 +627,33 @@ a {
   }
 }
 
+@media screen and (max-width: 768px) {
+  .container .item-ttl2 .inner {
+    padding: 50px;
+    width: calc(100% - 98px);
+    height: calc(100% - 98px);
+  }
+  .container .item-ttl2 .inner .ttl {
+    font-size: 3.5rem;
+    font-weight: normal;
+  }
+  .container .item-ttl2 .inner .ttl__number {
+    padding: 0 20px 0 0;
+  }
+  .container .item-ttl2 .inner .text-box .text {
+    margin: 30px 0;
+    font-size: 1.8rem;
+  }
+  .container .item-ttl2 .inner .btn-more a {
+    font-size: 1.4rem;
+  }
+}
+
 @media screen and (max-width: 480px) {
   .container .item-ttl2 .inner {
-    padding: 10px;
+    padding: 20px;
+    width: calc(100% - 38px);
+    height: calc(100% - 38px);
   }
   .container .item-ttl2 .inner .ttl {
     font-size: 2.5rem;
@@ -613,7 +664,6 @@ a {
   }
   .container .item-ttl2 .inner .text-box .text {
     margin: 20px 0;
-    font-size: 1.5rem;
   }
   .container .item-ttl2 .inner .btn-more a {
     font-size: 1.4rem;

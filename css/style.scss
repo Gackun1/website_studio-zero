@@ -32,6 +32,7 @@ a {
   src: url("../font/NotoSerifJP-Medium.otf");
 }
 
+$large-pc-width-px: 1280px;
 $pc-width-px: 960px;
 $tb-width-px: 768px;
 $sp-width-px: 480px;
@@ -365,7 +366,7 @@ $hamburger_color: #222222;
         transition: 0.3s;
       }
       &:hover .item__img-box__img {
-        opacity: 0.5;
+        opacity: 0.3;
         transition: 0.3s;
       }
     }
@@ -426,13 +427,30 @@ $hamburger_color: #222222;
         }
         .text-box {
           .text {
-            margin: 20px 0;
+            margin: 50px 0;
             font-size: 1.5rem;
           }
         }
         .btn-more {
           a {
             font-size: 1.4rem;
+            color: #666666;
+          }
+          .event-none {
+            pointer-events: none;
+            position: relative;
+            &:after {
+              content: "";
+              position: absolute;
+              bottom: calc(50% - 2px);
+              left: -5px;
+              padding: 0 5px 0 10px;
+              border-bottom: solid 1px #666666;
+            }
+            &:before {
+              width: 0;
+              height: 0;
+            }
           }
         }
       }
@@ -444,16 +462,26 @@ $hamburger_color: #222222;
     background-size: cover;
     background-repeat: no-repeat;
   }
-  .sns-box {
-  }
 }
 
+@media screen and (max-width: $large-pc-width-px) {
+  .container .item-ttl2 {
+    .inner {
+      .text-box {
+        .text {
+          margin: 30px 0;
+          font-size: 1.5rem;
+        }
+      }
+    }
+  }
+}
 @media screen and (max-width: $pc-width-px) {
   .container .item-ttl2 {
     .inner {
-      padding: 15px;
-      width: calc(100% - 28px);
-      height: calc(100% - 28px);
+      padding: 30px;
+      width: calc(100% - 58px);
+      height: calc(100% - 58px);
       .ttl {
         font-size: 2.5rem;
         font-weight: normal;
@@ -476,10 +504,40 @@ $hamburger_color: #222222;
   }
 }
 
+@media screen and (max-width: $tb-width-px) {
+  .container .item-ttl2 {
+    .inner {
+      padding: 50px;
+      width: calc(100% - 98px);
+      height: calc(100% - 98px);
+      .ttl {
+        font-size: 3.5rem;
+        font-weight: normal;
+        &__number {
+          padding: 0 20px 0 0;
+        }
+      }
+      .text-box {
+        .text {
+          margin: 30px 0;
+          font-size: 1.8rem;
+        }
+      }
+      .btn-more {
+        a {
+          font-size: 1.4rem;
+        }
+      }
+    }
+  }
+}
+
 @media screen and (max-width: $sp-width-px) {
   .container .item-ttl2 {
     .inner {
-      padding: 10px;
+      padding: 20px;
+      width: calc(100% - 38px);
+      height: calc(100% - 38px);
       .ttl {
         font-size: 2.5rem;
         font-weight: normal;
@@ -490,7 +548,6 @@ $hamburger_color: #222222;
       .text-box {
         .text {
           margin: 20px 0;
-          font-size: 1.5rem;
         }
       }
       .btn-more {

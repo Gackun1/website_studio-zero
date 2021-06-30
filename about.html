@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="js/index.js"></script>
+    <title>実験空間 StudioZero</title>
+  </head>
+
+  <body>
+    <header class="header">
+      <nav class="header__nav">
+        <a href="./"><img src="images/studiozero_logo.png" alt="" class="logo" /></a>
+        <ul class="list">
+          <li class="list__item"><a href="sample.html">About</a></li>
+          <li class="list__item"><a href="">Gallery</a></li>
+          <li class="list__item"><a href="">Contact</a></li>
+        </ul>
+      </nav>
+
+      <!-- hamburger menu -->
+      <nav id="hamburger_nav">
+        <ul>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Gallary</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+      <div id="hamburger_button" class="hamburger_button_close">
+        <span class="hamburger_line" id="line1"></span>
+        <span class="hamburger_line" id="line2"></span>
+        <span class="hamburger_line" id="line3"></span>
+      </div>
+      <!-- hamburger menu end -->
+    </header>
+    <main>
+      <section class="sec-kv"></section>
+    </main>
+    <footer class="footer">
+      <div class="inner">
+        <nav class="footer__nav">
+          <a href="./"><img src="images/studiozero_logo.png" alt="" class="logo" /></a>
+          <ul class="list">
+            <li class="list__item"><a href="">About</a></li>
+            <li class="list__item"><a href="">Gallery</a></li>
+            <li class="list__item"><a href="">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+      <small class="copy">&copy;2021 yoshikawa gaku</small>
+    </footer>
+    <script>
+      //hamburger
+      document.addEventListener("DOMContentLoaded", () => {
+        const hamburger = () => {
+          document.getElementById("line1").classList.toggle("line1_active");
+          document.getElementById("line2").classList.toggle("line2_active");
+          document.getElementById("line3").classList.toggle("line3_active");
+          document.getElementById("hamburger_nav").classList.toggle("hamburger_nav_active");
+          document.getElementById("hamburger_button").classList.toggle("hamburger_button_open");
+          document.getElementById("hamburger_button").classList.toggle("hamburger_button_close");
+        };
+        document.getElementById("hamburger_button").addEventListener("click", () => {
+          hamburger();
+        });
+      });
+    </script>
+  </body>
+</html>
