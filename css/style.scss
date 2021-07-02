@@ -800,6 +800,9 @@ $hamburger_color: #222222;
 
 /*product page*/
 .product-page {
+  .wrapper{
+    overflow:hidden;
+  }
   .header {
     position: sticky;
   }

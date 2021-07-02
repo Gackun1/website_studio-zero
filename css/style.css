@@ -935,6 +935,10 @@ a {
 }
 
 /*product page*/
+.product-page .wrapper {
+  overflow: hidden;
+}
+
 .product-page .header {
   position: -webkit-sticky;
   position: sticky;
