@@ -58,7 +58,6 @@ $circle-size: 20vw;
   top: 0;
   left: 0;
   width: 100%;
-
   &__nav {
     width: calc(100% - 160px);
     padding: 40px 120px 40px 40px;
@@ -93,8 +92,9 @@ $hamburger_color: #222222;
   top: 0;
   background: #ffffff;
   transition: 0.8s ease-in-out;
-
+  text-align: center;
   ul {
+    margin: 0 auto;
     padding-top: 80px;
     li {
       list-style-type: none;
@@ -440,22 +440,7 @@ $hamburger_color: #222222;
             font-size: 1.4rem;
             color: #666666;
           }
-          .event-none {
-            pointer-events: none;
-            position: relative;
-            &:after {
-              content: "";
-              position: absolute;
-              bottom: calc(50% - 2px);
-              left: -5px;
-              padding: 0 5px 0 10px;
-              border-bottom: solid 1px #666666;
-            }
-            &:before {
-              width: 0;
-              height: 0;
-            }
-          }
+        
         }
       }
     }
@@ -465,6 +450,34 @@ $hamburger_color: #222222;
     filter: grayscale(100%);
     background-size: cover;
     background-repeat: no-repeat;
+    transition: .25s all;
+    .inner{
+      transition: .25s all;
+    }
+    &:hover{
+      filter:grayscale(0);
+      .inner{
+        background: #ffffff99;
+      }
+    }
+  }
+}
+
+.event-none {
+  pointer-events: none;
+  position: relative;
+  &:after {
+    width: 100%;
+    content: "";
+    position: absolute;
+    bottom: calc(50% - 2px);
+    left: -5px;
+    padding: 0 5px 0 10px;
+    border-bottom: solid 1px #666666;
+  }
+  &:before {
+    width: 0;
+    height: 0;
   }
 }
 
@@ -591,6 +604,12 @@ $hamburger_color: #222222;
       filter: grayscale(100%);
       background-size: cover;
       background-repeat: no-repeat;
+      .inner{
+        transition: .25s all;
+      }
+      &:hover .inner{
+        background: #ffffff99;
+      }
     }
   }
 }
@@ -716,6 +735,16 @@ $hamburger_color: #222222;
       transition: 0.2s;
     }
   }
+  .event-none {
+    &:before{
+      width:0;
+      height:0;
+    }
+    &:after{
+      bottom: 40%;
+      width: 45px;
+    }
+  }
 }
 
 /*footer*/
@@ -825,7 +854,7 @@ $hamburger_color: #222222;
         width: 100%;
       }
       .right-box {
-        width: 100%;
+        width: calc(100% - 80px);
       }
     }
   }

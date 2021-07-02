@@ -100,9 +100,11 @@ a {
   background: #ffffff;
   -webkit-transition: 0.8s ease-in-out;
   transition: 0.8s ease-in-out;
+  text-align: center;
 }
 
 #hamburger_nav ul {
+  margin: 0 auto;
   padding-top: 80px;
 }
 
@@ -576,12 +578,37 @@ a {
   color: #666666;
 }
 
-.container .item-ttl2 .inner .btn-more .event-none {
+.container .gallery-box {
+  background: url(../images/bg2_800x400.png);
+  -webkit-filter: grayscale(100%);
+          filter: grayscale(100%);
+  background-size: cover;
+  background-repeat: no-repeat;
+  -webkit-transition: .25s all;
+  transition: .25s all;
+}
+
+.container .gallery-box .inner {
+  -webkit-transition: .25s all;
+  transition: .25s all;
+}
+
+.container .gallery-box:hover {
+  -webkit-filter: grayscale(0);
+          filter: grayscale(0);
+}
+
+.container .gallery-box:hover .inner {
+  background: #ffffff99;
+}
+
+.event-none {
   pointer-events: none;
   position: relative;
 }
 
-.container .item-ttl2 .inner .btn-more .event-none:after {
+.event-none:after {
+  width: 100%;
   content: "";
   position: absolute;
   bottom: calc(50% - 2px);
@@ -590,17 +617,9 @@ a {
   border-bottom: solid 1px #666666;
 }
 
-.container .item-ttl2 .inner .btn-more .event-none:before {
+.event-none:before {
   width: 0;
   height: 0;
-}
-
-.container .gallery-box {
-  background: url(../images/bg2_800x400.png);
-  -webkit-filter: grayscale(100%);
-          filter: grayscale(100%);
-  background-size: cover;
-  background-repeat: no-repeat;
 }
 
 @media screen and (max-width: 1280px) {
@@ -712,6 +731,15 @@ a {
           filter: grayscale(100%);
   background-size: cover;
   background-repeat: no-repeat;
+}
+
+.media-box .item-ttl2 .inner {
+  -webkit-transition: .25s all;
+  transition: .25s all;
+}
+
+.media-box .item-ttl2:hover .inner {
+  background: #ffffff99;
 }
 
 @media screen and (max-width: 960px) {
@@ -834,6 +862,16 @@ a {
   right: -5px;
   -webkit-transition: 0.2s;
   transition: 0.2s;
+}
+
+.btn-more .event-none:before {
+  width: 0;
+  height: 0;
+}
+
+.btn-more .event-none:after {
+  bottom: 40%;
+  width: 45px;
 }
 
 /*footer*/
@@ -967,7 +1005,7 @@ a {
     width: 100%;
   }
   .product-page .sec-main .right-box {
-    width: 100%;
+    width: calc(100% - 80px);
   }
 }
 /*# sourceMappingURL=style.css.map */
