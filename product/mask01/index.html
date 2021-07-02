@@ -9,11 +9,17 @@
     <title>実験空間 StudioZero</title>
   </head>
 
-  <body>
+  <body class="product-page">
     <header class="header">
       <nav class="header__nav">
-        <a href="../../"><img src="../../images/studiozero_logo.png" alt="" class="logo" /></a>
+        <a href="../../"
+          ><img
+            src="../../images/studiozero_logo_500x102.png"
+            alt=""
+            class="logo"
+        /></a>
         <ul class="list">
+          <li><a href="../../">Home</a></li>
           <li class="list__item"><a href="../../about.html">About</a></li>
           <li class="list__item"><a href="">Gallery</a></li>
           <li class="list__item"><a href="">Contact</a></li>
@@ -23,6 +29,7 @@
       <!-- hamburger menu -->
       <nav id="hamburger_nav">
         <ul>
+          <li><a href="../../">Home</a></li>
           <li><a href="../../about.html">About</a></li>
           <li><a href="#">Gallary</a></li>
           <li><a href="#">Contact</a></li>
@@ -36,12 +43,44 @@
       <!-- hamburger menu end -->
     </header>
     <main>
-      <section class="sec-kv"></section>
+      <section class="sec-main">
+        <div class="left-box">
+          <img src="../../images/img01-2x.png" alt="" />
+        </div>
+        <div class="right-box">
+          <h1>"masuku" -01-</h1>
+          <table>
+            <tbody>
+              <tr>
+                <th>作家</th>
+                <td>Reiko tojo</td>
+              </tr>
+              <tr>
+                <th>素材</th>
+                <td>植物</td>
+              </tr>
+              <tr>
+                <th>価格</th>
+                <td>5,500 ¥</td>
+              </tr>
+              <tr>
+                <th>サイズ</th>
+                <td>250 * 200 * 100 mm</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
     <footer class="footer">
       <div class="inner">
         <nav class="footer__nav">
-          <a href="../../"><img src="../../images/studiozero_logo.png" alt="" class="logo" /></a>
+          <a href="../../"
+            ><img
+              src="../../images/studiozero_logo_500x102_white.png"
+              alt=""
+              class="logo"
+          /></a>
           <ul class="list">
             <li class="list__item"><a href="../../about.html">About</a></li>
             <li class="list__item"><a href="">Gallery</a></li>
@@ -58,13 +97,21 @@
           document.getElementById("line1").classList.toggle("line1_active");
           document.getElementById("line2").classList.toggle("line2_active");
           document.getElementById("line3").classList.toggle("line3_active");
-          document.getElementById("hamburger_nav").classList.toggle("hamburger_nav_active");
-          document.getElementById("hamburger_button").classList.toggle("hamburger_button_open");
-          document.getElementById("hamburger_button").classList.toggle("hamburger_button_close");
+          document
+            .getElementById("hamburger_nav")
+            .classList.toggle("hamburger_nav_active");
+          document
+            .getElementById("hamburger_button")
+            .classList.toggle("hamburger_button_open");
+          document
+            .getElementById("hamburger_button")
+            .classList.toggle("hamburger_button_close");
         };
-        document.getElementById("hamburger_button").addEventListener("click", () => {
-          hamburger();
-        });
+        document
+          .getElementById("hamburger_button")
+          .addEventListener("click", () => {
+            hamburger();
+          });
       });
     </script>
   </body>

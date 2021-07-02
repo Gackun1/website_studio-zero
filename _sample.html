@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      .filter-img {
+        filter: grayscale(100%);
+      }
+      .no-filter-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        clip-path: circle(25vw);
+      }
+    </style>
+  </head>
+  <body>
+    <img src="images/img03_full.png" alt="" class="filter-img" />
+    <img src="images/img03_full.png" alt="" class="no-filter-img" />
+  </body>
+</html>

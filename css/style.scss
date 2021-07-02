@@ -5,6 +5,7 @@
   list-style: none;
   font-size: 62.5%;
   font-family: "noto-sans-jp-medium";
+  letter-spacing: 1px;
 }
 body {
   overflow-x: hidden;
@@ -208,7 +209,8 @@ $hamburger_color: #222222;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
-    font-size: 7rem;
+    font-size: 2rem;
+    text-shadow: 1px 1px 5px #333;
     color: #fff;
     letter-spacing: 5px;
     font-weight: normal;
@@ -226,6 +228,7 @@ $hamburger_color: #222222;
     height: $circle-size * 2;
     background: #555;
     border-radius: 100%;
+    box-sizing: border-box;
     border-left: solid 7px #000000;
     border-right: solid 7px #ffffff;
     mix-blend-mode: overlay;
@@ -234,10 +237,11 @@ $hamburger_color: #222222;
     z-index: 30;
     position: absolute;
     bottom: 0;
-    left: 50%;
+    left: 95%;
     transform: translate(-50%, -350%);
+    letter-spacing: 1px;
     a {
-      color: #fff;
+      color: #000;
     }
     &:after {
       content: "";
@@ -457,7 +461,7 @@ $hamburger_color: #222222;
     }
   }
   .gallery-box {
-    background: url(../images/bg2.jpg);
+    background: url(../images/bg2_800x400.png);
     filter: grayscale(100%);
     background-size: cover;
     background-repeat: no-repeat;
@@ -573,7 +577,7 @@ $hamburger_color: #222222;
       transform: translate(-50%, -50%);
       filter: grayscale(100%);
       opacity: 0.5;
-      width: 50%;
+      width: 20%;
       height: auto;
       object-fit: cover;
       mix-blend-mode: darken;
@@ -583,7 +587,7 @@ $hamburger_color: #222222;
       opacity: 1;
     }
     &-ttl2 {
-      background: url(../images/bg3.jpg);
+      background: url(../images/bg3_800x400.png);
       filter: grayscale(100%);
       background-size: cover;
       background-repeat: no-repeat;
@@ -640,6 +644,19 @@ $hamburger_color: #222222;
       order: -1;
     }
   }
+  .sec-kv {
+    .circle {
+      width: $circle-size * 4;
+      height: $circle-size * 4;
+    }
+    .trim-slide {
+      clip-path: circle($circle-size * 2);
+    }
+    .scroll {
+      left: 50%;
+      transform: translate(-50%, -350%);
+    }
+  }
 }
 
 @media screen and (max-width: $sp-width-px) {
@@ -665,18 +682,6 @@ $hamburger_color: #222222;
         left: 13px;
         bottom: 20px;
       }
-    }
-  }
-  .sec-kv {
-    .ttl {
-      font-size: 12vw;
-    }
-    .circle {
-      width: $circle-size * 4;
-      height: $circle-size * 4;
-    }
-    .trim-slide {
-      clip-path: circle($circle-size * 2);
     }
   }
 }
@@ -719,6 +724,7 @@ $hamburger_color: #222222;
   background: #333;
   color: #fff;
   text-align: center;
+  font-weight: normal;
   .inner {
     margin: 0 auto;
     padding: 100px 200px;
@@ -733,7 +739,6 @@ $hamburger_color: #222222;
     align-items: flex-start;
     .logo {
       width: 150px;
-      background: #fcfcfc;
       padding: 3px 5px;
     }
     .ttl {
@@ -760,6 +765,68 @@ $hamburger_color: #222222;
     }
     &__nav .list {
       margin: 0 0 0 30px;
+    }
+  }
+}
+
+/*product page*/
+.product-page {
+  .header {
+    position: sticky;
+  }
+  .sec-main {
+    display: flex;
+    width: 100vw;
+    height: auto;
+    .left-box {
+      width: 50%;
+      height: 100%;
+      img {
+        width: 100%;
+        object-fit: cover;
+      }
+    }
+    .right-box {
+      padding: 40px;
+      width: calc(50% - 80px);
+      height: 100%;
+      h1 {
+        font-size: 3rem;
+        letter-spacing: 2px;
+        margin: 0 0 40px 0;
+      }
+      table {
+        border-collapse: separate;
+        letter-spacing: 1px;
+      }
+      td,
+      th {
+        font-size: 1.6rem;
+        font-weight: normal;
+        text-align: left;
+        padding: 25px 20px 5px 0;
+        vertical-align: bottom;
+      }
+      th {
+        border-bottom: solid 1px #000;
+      }
+      td {
+        border-bottom: solid 1px #999;
+        font-size: 1.4rem;
+      }
+    }
+  }
+}
+@media screen and (max-width: $tb-width-px) {
+  .product-page {
+    .sec-main {
+      flex-direction: column;
+      .left-box {
+        width: 100%;
+      }
+      .right-box {
+        width: 100%;
+      }
     }
   }
 }

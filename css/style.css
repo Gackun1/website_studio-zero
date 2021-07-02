@@ -5,6 +5,7 @@
   list-style: none;
   font-size: 62.5%;
   font-family: "noto-sans-jp-medium";
+  letter-spacing: 1px;
 }
 
 body {
@@ -259,7 +260,8 @@ a {
   top: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
-  font-size: 7rem;
+  font-size: 2rem;
+  text-shadow: 1px 1px 5px #333;
   color: #fff;
   letter-spacing: 5px;
   font-weight: normal;
@@ -279,6 +281,8 @@ a {
   height: 40vw;
   background: #555;
   border-radius: 100%;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   border-left: solid 7px #000000;
   border-right: solid 7px #ffffff;
   mix-blend-mode: overlay;
@@ -288,13 +292,14 @@ a {
   z-index: 30;
   position: absolute;
   bottom: 0;
-  left: 50%;
+  left: 95%;
   -webkit-transform: translate(-50%, -350%);
           transform: translate(-50%, -350%);
+  letter-spacing: 1px;
 }
 
 .sec-kv .scroll a {
-  color: #fff;
+  color: #000;
 }
 
 .sec-kv .scroll:after {
@@ -591,7 +596,7 @@ a {
 }
 
 .container .gallery-box {
-  background: url(../images/bg2.jpg);
+  background: url(../images/bg2_800x400.png);
   -webkit-filter: grayscale(100%);
           filter: grayscale(100%);
   background-size: cover;
@@ -688,7 +693,7 @@ a {
   -webkit-filter: grayscale(100%);
           filter: grayscale(100%);
   opacity: 0.5;
-  width: 50%;
+  width: 20%;
   height: auto;
   -o-object-fit: cover;
      object-fit: cover;
@@ -702,7 +707,7 @@ a {
 }
 
 .media-box .item-ttl2 {
-  background: url(../images/bg3.jpg);
+  background: url(../images/bg3_800x400.png);
   -webkit-filter: grayscale(100%);
           filter: grayscale(100%);
   background-size: cover;
@@ -757,6 +762,19 @@ a {
         -ms-flex-order: -1;
             order: -1;
   }
+  .sec-kv .circle {
+    width: 80vw;
+    height: 80vw;
+  }
+  .sec-kv .trim-slide {
+    -webkit-clip-path: circle(40vw);
+            clip-path: circle(40vw);
+  }
+  .sec-kv .scroll {
+    left: 50%;
+    -webkit-transform: translate(-50%, -350%);
+            transform: translate(-50%, -350%);
+  }
 }
 
 @media screen and (max-width: 480px) {
@@ -781,17 +799,6 @@ a {
     position: absolute;
     left: 13px;
     bottom: 20px;
-  }
-  .sec-kv .ttl {
-    font-size: 12vw;
-  }
-  .sec-kv .circle {
-    width: 80vw;
-    height: 80vw;
-  }
-  .sec-kv .trim-slide {
-    -webkit-clip-path: circle(40vw);
-            clip-path: circle(40vw);
   }
 }
 
@@ -835,6 +842,7 @@ a {
   background: #333;
   color: #fff;
   text-align: center;
+  font-weight: normal;
 }
 
 .footer .inner {
@@ -858,7 +866,6 @@ a {
 
 .footer__nav .logo {
   width: 150px;
-  background: #fcfcfc;
   padding: 3px 5px;
 }
 
@@ -886,6 +893,81 @@ a {
   }
   .footer__nav .list {
     margin: 0 0 0 30px;
+  }
+}
+
+/*product page*/
+.product-page .header {
+  position: -webkit-sticky;
+  position: sticky;
+}
+
+.product-page .sec-main {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100vw;
+  height: auto;
+}
+
+.product-page .sec-main .left-box {
+  width: 50%;
+  height: 100%;
+}
+
+.product-page .sec-main .left-box img {
+  width: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.product-page .sec-main .right-box {
+  padding: 40px;
+  width: calc(50% - 80px);
+  height: 100%;
+}
+
+.product-page .sec-main .right-box h1 {
+  font-size: 3rem;
+  letter-spacing: 2px;
+  margin: 0 0 40px 0;
+}
+
+.product-page .sec-main .right-box table {
+  border-collapse: separate;
+  letter-spacing: 1px;
+}
+
+.product-page .sec-main .right-box td,
+.product-page .sec-main .right-box th {
+  font-size: 1.6rem;
+  font-weight: normal;
+  text-align: left;
+  padding: 25px 20px 5px 0;
+  vertical-align: bottom;
+}
+
+.product-page .sec-main .right-box th {
+  border-bottom: solid 1px #000;
+}
+
+.product-page .sec-main .right-box td {
+  border-bottom: solid 1px #999;
+  font-size: 1.4rem;
+}
+
+@media screen and (max-width: 768px) {
+  .product-page .sec-main {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+  }
+  .product-page .sec-main .left-box {
+    width: 100%;
+  }
+  .product-page .sec-main .right-box {
+    width: 100%;
   }
 }
 /*# sourceMappingURL=style.css.map */
