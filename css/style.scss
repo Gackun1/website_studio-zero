@@ -290,7 +290,9 @@ $hamburger_color: #222222;
     }
   }
 }
-
+.swiper-fade .swiper-slide {
+  overflow: hidden;
+}
 @keyframes zoomUp {
   0% {
     transform: scale(1);
@@ -440,7 +442,6 @@ $hamburger_color: #222222;
             font-size: 1.4rem;
             color: #666666;
           }
-        
         }
       }
     }
@@ -450,13 +451,13 @@ $hamburger_color: #222222;
     filter: grayscale(100%);
     background-size: cover;
     background-repeat: no-repeat;
-    transition: .25s all;
-    .inner{
-      transition: .25s all;
+    transition: 0.25s all;
+    .inner {
+      transition: 0.25s all;
     }
-    &:hover{
-      filter:grayscale(0);
-      .inner{
+    &:hover {
+      filter: grayscale(0);
+      .inner {
         background: #ffffff99;
       }
     }
@@ -604,10 +605,10 @@ $hamburger_color: #222222;
       filter: grayscale(100%);
       background-size: cover;
       background-repeat: no-repeat;
-      .inner{
-        transition: .25s all;
+      .inner {
+        transition: 0.25s all;
       }
-      &:hover .inner{
+      &:hover .inner {
         background: #ffffff99;
       }
     }
@@ -736,11 +737,11 @@ $hamburger_color: #222222;
     }
   }
   .event-none {
-    &:before{
-      width:0;
-      height:0;
+    &:before {
+      width: 0;
+      height: 0;
     }
-    &:after{
+    &:after {
       bottom: 40%;
       width: 45px;
     }
@@ -800,15 +801,15 @@ $hamburger_color: #222222;
 
 /*product page*/
 .product-page {
-  .wrapper{
-    overflow:hidden;
+  .wrapper {
+    overflow: hidden;
   }
   .header {
     position: fixed;
     background: #fff;
   }
   .sec-main {
-    padding: 115px 0 0 0 ;
+    padding: 115px 0 0 0;
     display: flex;
     width: 100vw;
     height: auto;
