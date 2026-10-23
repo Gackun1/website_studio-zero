@@ -48,10 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
   menuButton.addEventListener("keydown", (e) => {
-    if (e.key === "Tab" && !e.shiftKey && document.body.classList.contains("menu-open")) {
-      e.preventDefault();
-      drawer.querySelector("a").focus();
-    }
+    if (e.key !== "Tab" || !document.body.classList.contains("menu-open")) return;
+    e.preventDefault();
+    const links = drawer.querySelectorAll("a");
+    (e.shiftKey ? links[links.length - 1] : links[0]).focus();
   });
   drawer.addEventListener("click", (e) => {
     if (e.target.closest("a")) setMenu(false);
@@ -68,7 +68,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* hero slideshow */
   const slides = document.querySelectorAll(".hero__slide");
-  if (slides.length > 1 && !reduceMotion) {
+  // 閲覧中に「視差効果を減らす」が有効になった場合も再生を止める
+  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+  if (slides.length > 1) {
     let current = 0;
     let paused = false;
     const toggle = document.querySelector("[data-hero-toggle]");
@@ -79,7 +81,7 @@ document.addEventListener("DOMContentLoaded", () => {
       toggle.closest(".hero").classList.toggle("is-paused", paused);
     });
     setInterval(() => {
-      if (document.hidden || paused) return;
+      if (document.hidden || paused || motionQuery.matches) return;
       slides[current].classList.remove("is-active");
       current = (current + 1) % slides.length;
       const next = slides[current];
