@@ -433,17 +433,28 @@ button {
   z-index: 90;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 48px;
   padding: calc(var(--header-h) + 24px) var(--gutter) 48px;
   background: var(--ink);
   color: var(--paper);
   overflow-y: auto;
   opacity: 0;
+  pointer-events: none;
   transition: opacity 0.45s var(--ease);
+}
+.drawer[hidden] {
+  display: none;
 }
 .drawer.is-open {
   opacity: 1;
+  pointer-events: auto;
+}
+.drawer nav {
+  margin-top: auto;
+}
+.drawer__sns {
+  margin-bottom: auto;
 }
 .drawer li + li {
   border-top: 1px solid var(--line-light);
@@ -1782,5 +1793,42 @@ button {
   }
   .pager__all {
     padding: 8px 14px;
+  }
+}
+
+/* hero: 自動再生の停止ボタン */
+.hero__toggle {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 72px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border: 1px solid var(--line-light);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted-light);
+  font-family: var(--font-latin);
+  font-size: 0.9rem;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
+}
+.hero__toggle:hover {
+  color: var(--paper);
+  border-color: var(--paper);
+}
+.hero.is-paused .hero__slide {
+  transition: opacity 0.6s var(--ease);
+}
+@media (max-width: 900px) {
+  .hero__toggle {
+    bottom: 24px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__toggle {
+    display: none;
   }
 }

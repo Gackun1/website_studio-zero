@@ -27,7 +27,8 @@ const icon = {
 
 function layout({ path, title, description = site.description, body, bodyClass = "", ogImage = "images/ogp.jpg", jsonLd, absolute = false }) {
   const depth = path.split("/").length - 1;
-  const b = "../".repeat(depth);
+  // 404 はどの階層の URL でも表示されるため、パスを絶対 URL にする
+  const b = absolute ? site.url : "../".repeat(depth);
   const canonical = site.url + path.replace(/index\.html$/, "");
   const fullTitle = title ? `${title} | ${site.name}` : `${site.name} — 地方の街角から、何かを発信したい。`;
   const current = (href) => (path === href ? ' aria-current="page"' : "");
@@ -39,8 +40,7 @@ function layout({ path, title, description = site.description, body, bodyClass =
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-${absolute ? `<base href="${site.url}">
-<meta name="robots" content="noindex">` : ""}
+${absolute ? `<meta name="robots" content="noindex">` : ""}
 <title>${esc(fullTitle)}</title>
 <meta name="description" content="${esc(description)}">
 <link rel="canonical" href="${canonical}">
@@ -166,7 +166,8 @@ const home = layout({
         .join("\n      ")}
       <svg class="hero__ring" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="98"/></svg>
     </div>
-    <p class="hero__caption" data-hero-caption>Works by Reiko Tojo</p>
+    <p class="hero__caption">Works by Reiko Tojo</p>
+    <button class="hero__toggle" type="button" aria-pressed="false" data-hero-toggle>Pause</button>
   </div>
   <a class="hero__scroll" href="#intro"><span>Scroll</span></a>
 </section>
@@ -629,14 +630,13 @@ for (const [path, html] of pages) {
   writeFileSync(join(root, path), html);
 }
 
-const today = new Date().toISOString().slice(0, 10);
 writeFileSync(
   join(root, "sitemap.xml"),
   `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${pages
   .filter(([p]) => p !== "404.html")
-  .map(([p]) => `  <url><loc>${site.url}${p.replace(/index\.html$/, "")}</loc><lastmod>${today}</lastmod></url>`)
+  .map(([p]) => `  <url><loc>${site.url}${p.replace(/index\.html$/, "")}</loc></url>`)
   .join("\n")}
 </urlset>
 `

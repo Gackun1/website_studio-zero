@@ -18,11 +18,14 @@ document.addEventListener("DOMContentLoaded", () => {
   /* drawer menu */
   const menuButton = document.querySelector("[data-menu-button]");
   const drawer = document.querySelector("[data-drawer]");
+  // メニューを開いている間は背後の本文を操作・フォーカス不可にする
+  const background = document.querySelectorAll("#main, .site-footer, .skip-link");
   const setMenu = (open) => {
     menuButton.setAttribute("aria-expanded", String(open));
     menuButton.querySelector(".menu-button__label").textContent = open ? "Close" : "Menu";
     document.body.classList.toggle("menu-open", open);
     document.body.classList.toggle("is-locked", open);
+    background.forEach((el) => (el.inert = open));
     if (open) {
       drawer.hidden = false;
       requestAnimationFrame(() => drawer.classList.add("is-open"));
@@ -35,6 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
   menuButton.addEventListener("click", () => setMenu(menuButton.getAttribute("aria-expanded") !== "true"));
+  // Tab でドロワーの外（ヘッダーのロゴ・ボタン以外）へ抜けないよう循環させる
+  drawer.addEventListener("keydown", (e) => {
+    if (e.key !== "Tab") return;
+    const links = drawer.querySelectorAll("a");
+    if (!e.shiftKey && document.activeElement === links[links.length - 1]) {
+      e.preventDefault();
+      menuButton.focus();
+    }
+  });
+  menuButton.addEventListener("keydown", (e) => {
+    if (e.key === "Tab" && !e.shiftKey && document.body.classList.contains("menu-open")) {
+      e.preventDefault();
+      drawer.querySelector("a").focus();
+    }
+  });
   drawer.addEventListener("click", (e) => {
     if (e.target.closest("a")) setMenu(false);
   });
@@ -52,8 +70,16 @@ document.addEventListener("DOMContentLoaded", () => {
   const slides = document.querySelectorAll(".hero__slide");
   if (slides.length > 1 && !reduceMotion) {
     let current = 0;
+    let paused = false;
+    const toggle = document.querySelector("[data-hero-toggle]");
+    toggle.addEventListener("click", () => {
+      paused = !paused;
+      toggle.setAttribute("aria-pressed", String(paused));
+      toggle.textContent = paused ? "Play" : "Pause";
+      toggle.closest(".hero").classList.toggle("is-paused", paused);
+    });
     setInterval(() => {
-      if (document.hidden) return;
+      if (document.hidden || paused) return;
       slides[current].classList.remove("is-active");
       current = (current + 1) % slides.length;
       const next = slides[current];
@@ -87,8 +113,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const filter = document.querySelector("[data-filter]");
   const items = [...document.querySelectorAll(".gallery-item")];
   if (filter) {
+    const known = new Set([...filter.querySelectorAll("button")].map((b) => b.dataset.cat));
     const apply = (cat) => {
-      if (!filter.querySelector(`[data-cat="${cat}"]`)) cat = "all";
+      if (!known.has(cat)) cat = "all";
       filter.querySelectorAll("button").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.cat === cat)));
       items.forEach((item) => {
         item.hidden = cat !== "all" && item.dataset.cat !== cat;
@@ -149,14 +176,26 @@ document.addEventListener("DOMContentLoaded", () => {
       document.body.classList.remove("is-locked");
       if (opener) opener.focus();
     });
-    let touchX = null;
-    dialog.addEventListener("touchstart", (e) => (touchX = e.touches[0].clientX), { passive: true });
-    dialog.addEventListener("touchend", (e) => {
-      if (touchX === null) return;
-      const dx = e.changedTouches[0].clientX - touchX;
-      if (Math.abs(dx) > 60) step(dx > 0 ? -1 : 1);
-      touchX = null;
+    // 画像上の一本指の横スワイプだけを作品送りとして扱う
+    const figure = q(".lightbox__figure");
+    let touch = null;
+    figure.addEventListener(
+      "touchstart",
+      (e) => {
+        touch = e.touches.length === 1 ? { id: e.touches[0].identifier, x: e.touches[0].clientX, y: e.touches[0].clientY } : null;
+      },
+      { passive: true }
+    );
+    figure.addEventListener("touchend", (e) => {
+      const t = touch && [...e.changedTouches].find((c) => c.identifier === touch.id);
+      if (t && e.touches.length === 0) {
+        const dx = t.clientX - touch.x;
+        const dy = t.clientY - touch.y;
+        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx > 0 ? -1 : 1);
+      }
+      touch = null;
     });
+    figure.addEventListener("touchcancel", () => (touch = null));
   }
 
   /* contact: DM 用の文面を作る */
