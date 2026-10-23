@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://gackun1.github.io/website_studio-zero/sitemap.xml
