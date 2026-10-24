@@ -173,14 +173,13 @@ const home = layout({
         const w = works.find((x) => x.id === id);
         return `<button type="button" class="hero__panel${i === 0 ? " is-active" : ""}" aria-label="${esc(w.title)}"${i === 0 ? ' aria-current="true"' : ""} data-hero-panel>
       <img src="images/works/w${id}.webp" alt="" width="1080" height="1350"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy" decoding="async"'}>
-      <span class="hero__tate" aria-hidden="true">${esc(w.title)}</span>
       <span class="hero__cap" aria-hidden="true"><span><span class="hero__cap-title">${esc(w.title)}</span></span><span><span class="hero__cap-meta">${categories.find((c) => c.key === w.cat).en} — ${posts[id].date.slice(0, 4)}</span></span></span>
     </button>`;
       })
       .join("\n    ")}
   </div>
   <div class="hero__bar">
-    <h1 class="hero__title" id="hero-title"><span class="hero__title-ja">実験空間</span><span class="hero__title-en">Studio Zero</span></h1>
+    <h1 class="visually-hidden" id="hero-title">実験空間 Studio Zero</h1>
     <p class="hero__lead">地方の街角からだって、何かを発信したい。</p>
     <div class="hero__ctrl">
       <p class="hero__count"><b data-hero-index>01</b> / ${String(heroSlides.length).padStart(2, "0")}</p>
