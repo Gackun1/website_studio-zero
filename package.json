@@ -1,0 +1,10 @@
+{
+  "name": "website-studio-zero",
+  "version": "2.0.0",
+  "private": true,
+  "description": "実験空間 Studio Zero 公式サイト",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "serve": "npx --yes http-server -p 8080 -c-1 ."
+  }
+}
