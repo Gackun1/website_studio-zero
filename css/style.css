@@ -3,16 +3,16 @@
    ========================================================= */
 
 :root {
-  --ink: #161513;
-  --ink-2: #22201d;
-  --paper: #f4f1ea;
-  --paper-2: #ebe6db;
-  --text: #24221f;
-  --muted: #6d675d;
-  --muted-light: #a9a294;
-  --line: rgba(22, 21, 19, 0.14);
-  --line-light: rgba(244, 241, 234, 0.16);
-  --accent: #b8321f;
+  --ink: #111418;
+  --ink-2: #1a1e24;
+  --paper: #edefee;
+  --paper-2: #e0e4e3;
+  --text: #1c2025;
+  --muted: #5a6168;
+  --muted-light: #98a0a6;
+  --line: rgba(17, 20, 24, 0.14);
+  --line-light: rgba(237, 239, 238, 0.16);
+  --accent: #3b5f86;
 
   --font-sans: "Zen Kaku Gothic New", "Hiragino Sans", "Noto Sans JP", "Yu Gothic", sans-serif;
   --font-serif: "Shippori Mincho", "Hiragino Mincho ProN", "Noto Serif JP", "Yu Mincho", serif;
@@ -350,7 +350,7 @@ button {
   transform-origin: left;
 }
 .site-header.is-scrolled {
-  background: rgba(244, 241, 234, 0.92);
+  background: rgba(237, 239, 238, 0.92);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   box-shadow: 0 1px 0 var(--line);
@@ -500,172 +500,238 @@ button {
   }
 }
 
-/* ---------- hero ---------- */
+/* ---------- hero ----------
+   縦長の作品パネルを横に並べ、選ばれた1枚だけが大きく開くカルーセル。
+   パネル自体は動かさず、幅（flex-grow）の変化だけで切り替える。 */
 .hero {
+  --grow: 10;
+  --hero-dur: 6.5s;
+  --ease-io: cubic-bezier(0.76, 0, 0.18, 1);
   position: relative;
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   min-height: 100svh;
-  display: flex;
-  align-items: center;
+  padding: calc(var(--header-h) + 8px) var(--gutter) 0;
   background: var(--ink);
   color: var(--paper);
   overflow: hidden;
 }
-.hero::before {
+.hero__stage {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  min-height: 420px;
+  max-height: 860px;
+}
+.hero__panel {
+  position: relative;
+  flex: 1 1 0;
+  min-width: 0;
+  padding: 0;
+  border: 0;
+  background: var(--ink-2);
+  color: inherit;
+  font: inherit;
+  overflow: hidden;
+  cursor: pointer;
+  transition: flex-grow 1.3s var(--ease-io);
+}
+.hero__panel.is-active {
+  flex-grow: var(--grow);
+  cursor: default;
+}
+@media (hover: hover) {
+  .hero__panel:not(.is-active):hover {
+    flex-grow: 1.7;
+  }
+}
+.hero__panel:focus-visible {
+  outline: 1px solid var(--paper);
+  outline-offset: -1px;
+}
+/* 画像は「開いたときの幅」で固定して中央に置く。パネルが広がると、絵がカーテンのように現れる */
+.hero__panel img {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--open-w, 62vw);
+  max-width: none;
+  height: 100%;
+  object-fit: cover;
+  transform: translateX(-50%) scale(1.14);
+  filter: grayscale(1) brightness(0.5);
+  transition: transform 2.6s var(--ease), filter 1.3s var(--ease-io);
+}
+.hero__panel.is-active img {
+  transform: translateX(-50%) scale(1);
+  filter: none;
+}
+.hero__panel::after {
   content: "";
   position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at 70% 50%, rgba(255, 255, 255, 0.05), transparent 60%);
+  inset: 45% 0 0;
+  background: linear-gradient(transparent, rgba(12, 14, 17, 0.72));
+  opacity: 0;
+  transition: opacity 1s var(--ease);
+}
+.hero__panel.is-active::after {
+  opacity: 1;
+}
+/* 閉じているパネルには縦書きの作品名 */
+.hero__tate {
+  position: absolute;
+  z-index: 1;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  writing-mode: vertical-rl;
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  letter-spacing: 0.24em;
+  white-space: nowrap;
+  color: rgba(237, 239, 238, 0.78);
+  /* 閉じきってから現れる */
+  transition: opacity 0.6s 0.8s var(--ease);
+}
+.hero__panel.is-active .hero__tate {
+  opacity: 0;
+  transition-duration: 0.2s;
+}
+/* 開いたパネルのキャプションは下から一行ずつ現れる */
+.hero__cap {
+  position: absolute;
+  z-index: 1;
+  left: clamp(16px, 2.4vw, 32px);
+  right: clamp(16px, 2.4vw, 32px);
+  bottom: clamp(16px, 2.4vw, 28px);
+  display: grid;
+  gap: 2px;
+  text-align: left;
   pointer-events: none;
 }
-.hero__inner {
-  position: relative;
-  width: 100%;
-  max-width: calc(var(--container) + var(--gutter) * 2);
-  margin-inline: auto;
-  padding: calc(var(--header-h) + 32px) var(--gutter) 96px;
-  display: grid;
-  grid-template-columns: 1fr minmax(0, 1.05fr);
-  align-items: center;
-  gap: clamp(32px, 5vw, 80px);
+.hero__cap > span {
+  display: block;
+  overflow: hidden;
 }
-.hero__kicker {
+.hero__cap > span > span {
+  display: block;
+  transform: translateY(110%);
+  transition: transform 0.5s var(--ease);
+}
+.hero__panel.is-active .hero__cap > span > span {
+  transform: none;
+  transition: transform 1s 0.7s var(--ease);
+}
+.hero__panel.is-active .hero__cap > span + span > span {
+  transition-delay: 0.82s;
+}
+.hero__cap-title {
+  font-family: var(--font-serif);
+  font-size: clamp(1rem, 1.6vw, 1.25rem);
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.hero__cap-meta {
   font-family: var(--font-latin);
-  font-style: italic;
-  font-size: 1.1rem;
-  letter-spacing: 0.2em;
-  color: var(--muted-light);
+  font-size: 0.95rem;
+  letter-spacing: 0.12em;
+  color: rgba(237, 239, 238, 0.72);
+}
+
+.hero__bar {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 16px clamp(24px, 4vw, 64px);
+  padding-block: clamp(20px, 3vh, 32px) clamp(20px, 3.4vh, 36px);
 }
 .hero__title {
   display: flex;
   flex-direction: column;
-  margin: 0.4em 0 0.8em;
+  margin: 0;
   font-weight: 400;
+  animation: fadeup 1.4s 0.2s var(--ease) both;
 }
 .hero__title-ja {
   font-family: var(--font-serif);
-  font-weight: 500;
-  font-size: clamp(2.4rem, 5.6vw, 4.4rem);
-  letter-spacing: 0.24em;
-  line-height: 1.4;
+  font-size: 0.95rem;
+  letter-spacing: 0.42em;
 }
 .hero__title-en {
   font-family: var(--font-latin);
-  font-size: clamp(3rem, 8vw, 6.6rem);
+  font-weight: 400;
+  font-size: clamp(2.6rem, 5.4vw, 4.6rem);
   line-height: 1;
   letter-spacing: 0.01em;
 }
-.hero__title-en em {
-  font-style: italic;
-}
 .hero__lead {
+  margin: 0;
   font-family: var(--font-serif);
-  font-size: clamp(1rem, 1.6vw, 1.2rem);
-  line-height: 2.2;
-  letter-spacing: 0.18em;
-  color: #d9d3c6;
+  font-size: clamp(0.92rem, 1.3vw, 1.05rem);
+  letter-spacing: 0.2em;
+  color: var(--muted-light);
+  animation: fadeup 1.4s 0.4s var(--ease) both;
 }
-.hero__circle {
+.hero__ctrl {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-family: var(--font-latin);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.12em;
+  color: var(--muted-light);
+}
+.hero__count {
+  margin: 0;
+  font-size: 1rem;
+}
+.hero__count b {
+  font-weight: 400;
+  color: var(--paper);
+}
+/* 次の作品までの残り時間。このアニメーションの終わりで次へ進む */
+.hero__progress {
   position: relative;
-  width: min(100%, 76vh);
-  aspect-ratio: 1;
-  justify-self: end;
-  border-radius: 50%;
+  width: clamp(64px, 8vw, 120px);
+  height: 1px;
+  background: var(--line-light);
   overflow: hidden;
-  background: var(--ink-2);
-  isolation: isolate;
 }
-.hero__slide {
+.hero__progress i {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  opacity: 0;
-  transform: scale(1.08);
-  transition: opacity 2.2s var(--ease), transform 8s linear;
+  background: var(--paper);
+  transform: scaleX(0);
+  transform-origin: left;
 }
-.hero__slide.is-active {
-  opacity: 1;
-  transform: scale(1);
+.hero__progress.is-running i {
+  animation: hero-progress var(--hero-dur) linear forwards;
 }
-.hero__ring {
-  position: absolute;
-  inset: -1px;
-  width: calc(100% + 2px);
-  height: calc(100% + 2px);
-  max-width: none;
-  pointer-events: none;
+.hero.is-paused .hero__progress i,
+.hero.is-holding .hero__progress i {
+  animation-play-state: paused;
 }
-.hero__ring circle {
-  fill: none;
-  stroke: rgba(244, 241, 234, 0.5);
-  stroke-width: 0.6;
-  stroke-dasharray: 616;
-  stroke-dashoffset: 616;
-  animation: ring 3.2s 0.3s var(--ease) forwards;
-}
-@keyframes ring {
+@keyframes hero-progress {
   to {
-    stroke-dashoffset: 0;
+    transform: scaleX(1);
   }
 }
-.hero__caption {
-  position: absolute;
-  right: var(--gutter);
-  bottom: 40px;
-  font-family: var(--font-latin);
-  font-style: italic;
+.hero__toggle {
+  padding: 4px 0;
+  border: 0;
+  border-bottom: 1px solid transparent;
+  background: none;
+  color: inherit;
+  font: inherit;
   font-size: 0.95rem;
-  letter-spacing: 0.1em;
-  color: var(--muted-light);
+  cursor: pointer;
+  transition: color 0.3s, border-color 0.3s;
 }
-.hero__scroll {
-  position: absolute;
-  left: var(--gutter);
-  bottom: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  font-family: var(--font-latin);
-  font-size: 0.85rem;
-  letter-spacing: 0.2em;
-  writing-mode: vertical-rl;
-  color: var(--muted-light);
-}
-.hero__scroll::after {
-  content: "";
-  width: 1px;
-  height: 72px;
-  background: linear-gradient(var(--paper), transparent);
-  animation: scrollline 2.4s var(--ease) infinite;
-  transform-origin: top;
-}
-@keyframes scrollline {
-  0% {
-    transform: scaleY(0);
-  }
-  50% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  51% {
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-}
-.hero__text > * {
-  animation: fadeup 1.4s var(--ease) both;
-}
-.hero__text > :nth-child(2) {
-  animation-delay: 0.15s;
-}
-.hero__text > :nth-child(3) {
-  animation-delay: 0.3s;
+.hero__toggle:hover {
+  color: var(--paper);
+  border-color: currentColor;
 }
 @keyframes fadeup {
   from {
@@ -675,27 +741,44 @@ button {
 }
 
 @media (max-width: 900px) {
-  .hero__inner {
-    grid-template-columns: 1fr;
-    padding-bottom: 120px;
+  .hero {
+    --grow: 7;
   }
-  .hero__circle {
-    order: -1;
-    justify-self: center;
-    width: min(82vw, 52vh);
+  .hero__stage {
+    gap: 5px;
+    min-height: 360px;
   }
-  .hero__text {
-    text-align: center;
-  }
-  .hero__title {
-    margin-bottom: 0.6em;
-  }
-  .hero__caption {
+  .hero__tate {
     display: none;
   }
-  .hero__scroll {
-    left: 50%;
-    transform: translateX(-50%);
+  .hero__bar {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+  .hero__lead {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    font-size: 0.85rem;
+    letter-spacing: 0.12em;
+  }
+  .hero__title-en {
+    font-size: clamp(2rem, 9vw, 2.6rem);
+    white-space: nowrap;
+  }
+  .hero__cap-title {
+    font-size: 0.92rem;
+    letter-spacing: 0.08em;
+  }
+  .hero__ctrl {
+    gap: 12px;
+  }
+  .hero__progress {
+    width: 48px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero__progress,
+  .hero__toggle {
+    display: none;
   }
 }
 
@@ -751,7 +834,7 @@ button {
 }
 .masuku-card__img {
   overflow: hidden;
-  background: #e9e5dc;
+  background: #dde1e0;
 }
 .masuku-card__img img {
   width: 100%;
@@ -1105,7 +1188,7 @@ button {
   letter-spacing: 0.14em;
 }
 .exhibition-statement p:not(.statement) {
-  color: #cfc8ba;
+  color: #c2c8cc;
 }
 .masuku-grid--large {
   gap: clamp(20px, 3vw, 48px);
@@ -1139,7 +1222,7 @@ button {
   padding-block: clamp(32px, 5vw, 64px) var(--section);
 }
 .product__img {
-  background: #e9e5dc;
+  background: #dde1e0;
 }
 .product__img img {
   width: 100%;
@@ -1280,7 +1363,7 @@ button {
   display: flex;
   flex-direction: column;
   padding: 40px 16px 14px;
-  background: linear-gradient(transparent, rgba(22, 21, 19, 0.8));
+  background: linear-gradient(transparent, rgba(17, 20, 24, 0.8));
   color: var(--paper);
   opacity: 0;
   transform: translateY(8px);
@@ -1293,7 +1376,7 @@ button {
 }
 .gallery-item__meta {
   font-size: 0.72rem;
-  color: #d4cdbf;
+  color: #c8cdd0;
 }
 .gallery-item__btn:hover img {
   transform: scale(1.04);
@@ -1331,7 +1414,7 @@ button {
   margin: 0;
   padding: 0;
   border: 0;
-  background: rgba(16, 15, 13, 0.96);
+  background: rgba(12, 14, 17, 0.96);
   color: var(--paper);
 }
 .lightbox[open] {
@@ -1385,7 +1468,7 @@ button {
   margin-top: 1.2em;
   font-size: 0.9rem;
   line-height: 2;
-  color: #d9d3c6;
+  color: #cdd2d5;
 }
 .lightbox__caption:empty {
   display: none;
@@ -1406,7 +1489,7 @@ button {
   height: 52px;
   border: 1px solid var(--line-light);
   border-radius: 50%;
-  background: rgba(22, 21, 19, 0.6);
+  background: rgba(17, 20, 24, 0.6);
   color: var(--paper);
   font-size: 1.3rem;
   cursor: pointer;
@@ -1552,7 +1635,7 @@ button {
   gap: 20px;
   padding: 28px;
   border: 1px solid var(--line);
-  background: #f8f6f1;
+  background: #f4f6f5;
   transition: border-color 0.3s, background 0.3s;
 }
 .channel:hover {
@@ -1598,7 +1681,7 @@ button {
   padding: 12px 14px;
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: #fbfaf7;
+  background: #f7f8f8;
   color: var(--text);
   font: inherit;
   font-size: 1rem;
@@ -1689,22 +1772,119 @@ button {
   background: var(--ink);
   color: var(--paper);
 }
+/* 問い合わせ欄: 縦書きの宛名を書いた郵便はがき。越後妻有国際メールアート展への参加にちなむ */
 .site-footer__cta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 48px clamp(40px, 8vw, 120px);
   max-width: calc(var(--container) + var(--gutter) * 2);
   margin-inline: auto;
-  padding: clamp(80px, 10vw, 140px) var(--gutter);
-  text-align: center;
+  padding: clamp(72px, 9vw, 128px) var(--gutter);
   border-bottom: 1px solid var(--line-light);
 }
 .site-footer__cta .eyebrow {
   color: var(--muted-light);
 }
 .site-footer__lead {
-  margin: 0.6em 0 1.6em;
+  margin: 0.4em 0 0;
   font-family: var(--font-serif);
-  font-size: clamp(1.3rem, 3vw, 2rem);
+  font-size: clamp(1.2rem, 2.4vw, 1.7rem);
   line-height: 1.9;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.12em;
+}
+.postcard {
+  --post-red: #c8402f;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr auto;
+  gap: 12px;
+  width: clamp(236px, 25vw, 290px);
+  aspect-ratio: 100 / 148;
+  margin-right: clamp(0px, 3vw, 40px);
+  padding: 18px 18px 16px;
+  background: #f3f4f1;
+  color: var(--text);
+  transform: rotate(-3deg);
+  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2), 0 30px 40px -24px rgba(0, 0, 0, 0.8);
+  transition: transform 0.9s var(--ease);
+}
+.postcard:hover,
+.postcard:focus-within {
+  transform: rotate(-1deg) translateY(-6px);
+}
+.postcard__stamp {
+  width: 58px;
+  aspect-ratio: 4 / 5;
+  padding: 4px;
+  background: #fff;
+  outline: 1px dashed rgba(17, 20, 24, 0.35);
+  outline-offset: 2px;
+}
+.postcard__stamp img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.postcard__zip {
+  justify-self: end;
+  display: flex;
+  gap: 3px;
+}
+.postcard__zip i {
+  width: 14px;
+  height: 20px;
+  border: 1px solid var(--post-red);
+}
+.postcard__zip i:nth-child(4) {
+  margin-left: 4px;
+}
+.postcard__to {
+  grid-column: 1 / -1;
+  justify-self: center;
+  align-self: center;
+  margin: 0;
+  writing-mode: vertical-rl;
+  font-family: var(--font-serif);
+  font-size: clamp(1.4rem, 2.2vw, 1.75rem);
+  letter-spacing: 0.3em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.postcard__to span {
+  display: block;
+  margin-left: 1.1em;
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+.postcard__from {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px 14px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(17, 20, 24, 0.2);
+  font-size: 0.8rem;
+  letter-spacing: 0.04em;
+}
+.postcard__from a {
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.3s;
+}
+.postcard__from a:hover {
+  border-color: currentColor;
+}
+.postcard__from li:first-child a {
+  font-weight: 500;
+}
+@media (max-width: 760px) {
+  .site-footer__cta {
+    grid-template-columns: 1fr;
+  }
+  .postcard {
+    margin-left: 8px;
+  }
 }
 .site-footer__body {
   display: flex;
@@ -1793,42 +1973,5 @@ button {
   }
   .pager__all {
     padding: 8px 14px;
-  }
-}
-
-/* hero: 自動再生の停止ボタン */
-.hero__toggle {
-  position: absolute;
-  right: var(--gutter);
-  bottom: 72px;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  border: 1px solid var(--line-light);
-  border-radius: 999px;
-  background: transparent;
-  color: var(--muted-light);
-  font-family: var(--font-latin);
-  font-size: 0.9rem;
-  letter-spacing: 0.1em;
-  cursor: pointer;
-  transition: color 0.3s, border-color 0.3s;
-}
-.hero__toggle:hover {
-  color: var(--paper);
-  border-color: var(--paper);
-}
-.hero.is-paused .hero__slide {
-  transition: opacity 0.6s var(--ease);
-}
-@media (max-width: 900px) {
-  .hero__toggle {
-    bottom: 24px;
-  }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero__toggle {
-    display: none;
   }
 }

@@ -66,28 +66,83 @@ document.addEventListener("DOMContentLoaded", () => {
     if (e.matches) setMenu(false);
   });
 
-  /* hero slideshow */
-  const slides = document.querySelectorAll(".hero__slide");
-  // 閲覧中に「視差効果を減らす」が有効になった場合も再生を止める
-  const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
-  if (slides.length > 1) {
+  /* hero carousel: 選んだパネルだけが大きく開く */
+  const hero = document.querySelector("[data-hero]");
+  if (hero) {
+    const stage = hero.querySelector("[data-hero-stage]");
+    const panels = [...hero.querySelectorAll("[data-hero-panel]")];
+    const progress = hero.querySelector("[data-hero-progress]");
+    const counter = hero.querySelector("[data-hero-index]");
+    const toggle = hero.querySelector("[data-hero-toggle]");
+    // 閲覧中に「視差効果を減らす」が有効になった場合も自動再生を止める
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
     let current = 0;
     let paused = false;
-    const toggle = document.querySelector("[data-hero-toggle]");
+
+    // 画像の幅を「開いたパネルの幅」に固定しておくと、開閉中に絵が伸び縮みしない
+    const fitImages = () => {
+      const grow = parseFloat(getComputedStyle(hero).getPropertyValue("--grow")) || 10;
+      const gap = parseFloat(getComputedStyle(stage).columnGap) || 0;
+      const free = stage.clientWidth - gap * (panels.length - 1);
+      stage.style.setProperty("--open-w", `${Math.ceil((free * grow) / (grow + panels.length - 1))}px`);
+    };
+    fitImages();
+    new ResizeObserver(fitImages).observe(stage);
+
+    const restartProgress = () => {
+      progress.classList.remove("is-running");
+      if (paused || motionQuery.matches) return;
+      void progress.offsetWidth;
+      progress.classList.add("is-running");
+    };
+    const go = (index) => {
+      current = (index + panels.length) % panels.length;
+      panels.forEach((p, i) => {
+        p.classList.toggle("is-active", i === current);
+        if (i === current) p.setAttribute("aria-current", "true");
+        else p.removeAttribute("aria-current");
+      });
+      // 次に開くパネルの画像を先に読み込んでおく
+      panels[(current + 1) % panels.length].querySelector("img").loading = "eager";
+      counter.textContent = String(current + 1).padStart(2, "0");
+      restartProgress();
+    };
+    progress.addEventListener("animationend", () => go(current + 1));
+    panels.forEach((p, i) => p.addEventListener("click", () => i !== current && go(i)));
+
+    // マウスを乗せている間とキーボード操作中は待つ
+    const hold = (on) => hero.classList.toggle("is-holding", on);
+    stage.addEventListener("pointerenter", (e) => e.pointerType === "mouse" && hold(true));
+    stage.addEventListener("pointerleave", () => hold(false));
+    stage.addEventListener("focusin", () => hold(true));
+    stage.addEventListener("focusout", () => hold(false));
+
     toggle.addEventListener("click", () => {
       paused = !paused;
       toggle.setAttribute("aria-pressed", String(paused));
       toggle.textContent = paused ? "Play" : "Pause";
-      toggle.closest(".hero").classList.toggle("is-paused", paused);
+      hero.classList.toggle("is-paused", paused);
+      if (!paused && !progress.classList.contains("is-running")) restartProgress();
     });
-    setInterval(() => {
-      if (document.hidden || paused || motionQuery.matches) return;
-      slides[current].classList.remove("is-active");
-      current = (current + 1) % slides.length;
-      const next = slides[current];
-      next.loading = "eager";
-      next.classList.add("is-active");
-    }, 6000);
+    motionQuery.addEventListener("change", restartProgress);
+
+    // 一本指の横スワイプで前後へ
+    let touch = null;
+    stage.addEventListener(
+      "touchstart",
+      (e) => (touch = e.touches.length === 1 ? { x: e.touches[0].clientX, y: e.touches[0].clientY } : null),
+      { passive: true }
+    );
+    stage.addEventListener("touchend", (e) => {
+      if (!touch) return;
+      const dx = e.changedTouches[0].clientX - touch.x;
+      const dy = e.changedTouches[0].clientY - touch.y;
+      if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) go(current + (dx < 0 ? 1 : -1));
+      touch = null;
+    });
+    stage.addEventListener("touchcancel", () => (touch = null));
+
+    restartProgress();
   }
 
   /* reveal on scroll */

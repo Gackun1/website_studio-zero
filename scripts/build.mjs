@@ -25,12 +25,16 @@ const icon = {
   ext: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6m0-6-9 9M18 14v6H4V6h6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>',
 };
 
+const stamps = ["038", "002", "078", "036", "065", "022", "025", "000", "040", "023"];
+
 function layout({ path, title, description = site.description, body, bodyClass = "", ogImage = "images/ogp.jpg", jsonLd, absolute = false }) {
   const depth = path.split("/").length - 1;
   // 404 はどの階層の URL でも表示されるため、パスを絶対 URL にする
   const b = absolute ? site.url : "../".repeat(depth);
   const canonical = site.url + path.replace(/index\.html$/, "");
-  const fullTitle = title ? `${title} | ${site.name}` : `${site.name} — 地方の街角から、何かを発信したい。`;
+  const fullTitle = title ? `${title} | ${site.name}` : `${site.name} — 地方の街角からだって、何かを発信したい。`;
+  // はがきの切手にはページごとに違う作品を貼る
+  const stamp = stamps[[...path].reduce((n, c) => n + c.charCodeAt(0), 0) % stamps.length];
   const current = (href) => (path === href ? ' aria-current="page"' : "");
   const navLinks = nav
     .map((n) => `<li><a href="${b}${n.href}"${current(n.href)}><span class="en">${n.label}</span><span class="ja">${n.ja}</span></a></li>`)
@@ -52,7 +56,7 @@ ${absolute ? `<meta name="robots" content="noindex">` : ""}
 <meta property="og:image" content="${site.url}${ogImage}">
 <meta property="og:locale" content="ja_JP">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="theme-color" content="#161513">
+<meta name="theme-color" content="#111418">
 <link rel="icon" href="${b}images/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="${b}images/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -93,9 +97,20 @@ ${body}
 </main>
 <footer class="site-footer">
   <div class="site-footer__cta">
-    <p class="eyebrow">Contact</p>
-    <p class="site-footer__lead">作品のこと、展示のこと。<br>お気軽にお便りください。</p>
-    <a class="button button--light" href="${b}contact.html">お問い合わせ ${icon.arrow}</a>
+    <div class="site-footer__note">
+      <p class="eyebrow">Contact</p>
+      <p class="site-footer__lead">作品の購入や展示のご相談は、<br>Instagram の DM で受け付けています。</p>
+    </div>
+    <div class="postcard">
+      <span class="postcard__stamp"><img src="${b}images/works/w${stamp}-sm.webp" alt="" width="540" height="675" loading="lazy" decoding="async"></span>
+      <span class="postcard__zip" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+      <p class="postcard__to"><span>実験空間 Studio Zero</span>東條麗子 様</p>
+      <ul class="postcard__from">
+        <li><a href="${site.instagram}" target="_blank" rel="noopener">Instagram で送る</a></li>
+        <li><a href="${site.facebook}" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a href="${b}contact.html">文面をつくる</a></li>
+      </ul>
+    </div>
   </div>
   <div class="site-footer__body">
     <a class="site-footer__logo" href="${b}index.html"><img src="${b}images/logo-white.png" alt="${esc(site.name)}" width="800" height="163" loading="lazy"></a>
@@ -115,7 +130,7 @@ ${body}
 }
 
 const sectionHead = (no, en, ja) =>
-  `<header class="section-head"><p class="section-head__no">${no}</p><h2 class="section-head__title"><span class="en">${en}</span><span class="ja">${ja}</span></h2></header>`;
+  `<header class="section-head"><h2 class="section-head__title"><span class="en">${en}</span><span class="ja">${ja}</span></h2></header>`;
 
 const workImg = (id, alt, { sizes = "(min-width: 960px) 25vw, 50vw", eager = false, b = "" } = {}) =>
   `<img src="${b}images/works/w${id}-sm.webp" srcset="${b}images/works/w${id}-sm.webp 540w, ${b}images/works/w${id}.webp 1080w" sizes="${sizes}" alt="${esc(alt)}" width="540" height="675"${eager ? "" : ' loading="lazy" decoding="async"'}>`;
@@ -134,7 +149,8 @@ const masukuCard = (m, b = "") => `<li class="masuku-card reveal">
 </li>`;
 
 /* ---------- Home ---------- */
-const heroSlides = ["038", "002", "037", "025", "039"];
+// トップのカルーセルに並べる作品（ギャラリーの id）
+const heroSlides = ["038", "002", "078", "022", "000", "065", "025"];
 const home = layout({
   path: "index.html",
   title: "",
@@ -150,26 +166,28 @@ const home = layout({
     sameAs: [site.instagram, site.facebook],
   },
   body: `
-<section class="hero" aria-label="実験空間 Studio Zero">
-  <div class="hero__inner">
-    <div class="hero__text">
-      <p class="hero__kicker">Experimental Space</p>
-      <h1 class="hero__title"><span class="hero__title-ja">実験空間</span><span class="hero__title-en">Studio <em>Zero</em></span></h1>
-      <p class="hero__lead">地方の街角からだって、<br>何かを発信したい。</p>
-    </div>
-    <div class="hero__circle" data-hero>
-      ${heroSlides
-        .map(
-          (id, i) =>
-            `<img class="hero__slide${i === 0 ? " is-active" : ""}" src="images/works/w${id}.webp" alt="" width="1080" height="1350"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy"'}>`
-        )
-        .join("\n      ")}
-      <svg class="hero__ring" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="98"/></svg>
-    </div>
-    <p class="hero__caption">Works by Reiko Tojo</p>
-    <button class="hero__toggle" type="button" aria-pressed="false" data-hero-toggle>Pause</button>
+<section class="hero" aria-labelledby="hero-title" data-hero>
+  <div class="hero__stage" role="group" aria-label="作品" data-hero-stage>
+    ${heroSlides
+      .map((id, i) => {
+        const w = works.find((x) => x.id === id);
+        return `<button type="button" class="hero__panel${i === 0 ? " is-active" : ""}" aria-label="${esc(w.title)}"${i === 0 ? ' aria-current="true"' : ""} data-hero-panel>
+      <img src="images/works/w${id}.webp" alt="" width="1080" height="1350"${i === 0 ? ' fetchpriority="high"' : ' loading="lazy" decoding="async"'}>
+      <span class="hero__tate" aria-hidden="true">${esc(w.title)}</span>
+      <span class="hero__cap" aria-hidden="true"><span><span class="hero__cap-title">${esc(w.title)}</span></span><span><span class="hero__cap-meta">${categories.find((c) => c.key === w.cat).en} — ${posts[id].date.slice(0, 4)}</span></span></span>
+    </button>`;
+      })
+      .join("\n    ")}
   </div>
-  <a class="hero__scroll" href="#intro"><span>Scroll</span></a>
+  <div class="hero__bar">
+    <h1 class="hero__title" id="hero-title"><span class="hero__title-ja">実験空間</span><span class="hero__title-en">Studio Zero</span></h1>
+    <p class="hero__lead">地方の街角からだって、何かを発信したい。</p>
+    <div class="hero__ctrl">
+      <p class="hero__count"><b data-hero-index>01</b> / ${String(heroSlides.length).padStart(2, "0")}</p>
+      <span class="hero__progress" aria-hidden="true" data-hero-progress><i></i></span>
+      <button class="hero__toggle" type="button" aria-pressed="false" data-hero-toggle>Pause</button>
+    </div>
+  </div>
 </section>
 
 <section class="intro section" id="intro">
@@ -178,7 +196,7 @@ const home = layout({
     <div class="intro__body reveal">
       <h3 class="intro__title">モノづくりを通した、<br>街づくりへの挑戦。</h3>
       <p>実験空間 Studio Zero は、作家・東條麗子が主宰するアートスペースです。17年間にわたり、さまざまな企画展を開催してきました。</p>
-      <p>絵画、オブジェ、そして捨てられるはずだった素材にもうひと手間をかける「手いたずら」。暮らしのすぐそばにあるものから、ゼロから何かを生み出す実験を続けています。</p>
+      <p>制作しているのは、絵画、オブジェ、そして本人が「手いたずら」と呼ぶ手仕事です。空き缶やジーンズ、胡桃の殻など、身近な素材をよく使います。</p>
       <a class="text-link" href="about.html">スタジオと作家について ${icon.arrow}</a>
     </div>
   </div>
@@ -188,7 +206,7 @@ const home = layout({
   <div class="container">
     ${sectionHead("02", "Exhibition", "企画展『-MASUKU-』")}
     <div class="feature__lead reveal">
-      <p>植物、針金、石膏、ジーンズ、新聞紙。<br>マスクが日常になった年に、9つの素材で9つのマスクをつくりました。</p>
+      <p>植物、針金、石膏、ジーンズ、新聞紙など、9種類の素材でつくったマスク9点。2020年の企画展です。</p>
       <a class="text-link text-link--light" href="exhibition.html">展覧会を見る ${icon.arrow}</a>
     </div>
     <ul class="masuku-grid">
@@ -202,10 +220,10 @@ const home = layout({
     ${sectionHead("03", "Gallery", "作品")}
     <div class="cat-grid">
       ${[
-        ["painting", "039", "黒地に白の線を幾重にも重ねる線描。ときに2週間ほどかけて描き進めます。"],
-        ["object", "087", "張り子、ワイヤー、マッチ棒。身近な素材を組み上げる立体作品。"],
-        ["season", "044", "門松やしめ飾り、季節の花。暮らしを彩るしつらえ。"],
-        ["tewaza", "022", "空き缶、ジーンズ、胡桃の殻。捨てる前に、もうひと手間。"],
+        ["painting", "039", "黒地に白い線を重ねて描く線描。"],
+        ["object", "087", "張り子、ワイヤー、マッチ棒などでつくる立体。"],
+        ["season", "044", "門松、しめ飾り、季節の花。"],
+        ["tewaza", "022", "空き缶、ジーンズ、胡桃の殻などを使った手仕事。"],
       ]
         .map(
           ([key, id, text]) => `<a class="cat-card reveal" href="gallery.html#${key}">
@@ -241,7 +259,7 @@ const home = layout({
   <div class="container">
     ${sectionHead("05", "Journal", "日々の制作")}
     <div class="journal__head reveal">
-      <p>制作の様子や新作は、Instagram で日々発信しています。</p>
+      <p>制作の様子や新作は Instagram に載せています。</p>
       <a class="button button--outline" href="${site.instagram}" target="_blank" rel="noopener">${icon.instagram} ${site.instagramHandle}</a>
     </div>
     <ul class="journal-grid">
@@ -282,9 +300,9 @@ const about = layout({
     <div class="split__img reveal">${workImg("037", "東條麗子による白の線描作品", { sizes: "(min-width: 960px) 45vw, 100vw", eager: true })}</div>
     <div class="split__body reveal">
       <p class="eyebrow">Studio Zero</p>
-      <h2 class="h2">ゼロから始める、<br>実験の場所。</h2>
-      <p>「地方の街角からだって、何かを発信したい」。実験空間 Studio Zero は、その思いから生まれたアートスペースです。</p>
-      <p>大きな美術館や都市のギャラリーでなくても、日々の暮らしの中からアートは生まれる。17年間にわたり、モノづくりを通した街づくりに挑戦しながら、さまざまな企画展を開いてきました。</p>
+      <h2 class="h2">地方の街角からだって、<br>何かを発信したい。</h2>
+      <p>実験空間 Studio Zero は、作家・東條麗子が主宰するアートスペースです。</p>
+      <p>モノづくりを通した街づくりを掲げて、17年間にわたり企画展を開いてきました。</p>
     </div>
   </div>
 </section>
@@ -298,9 +316,9 @@ const about = layout({
         <p class="artist__en">Reiko Tojo</p>
       </div>
       <div class="artist__body reveal">
-        <p>美術作家。実験空間 Studio Zero 主宰。絵画、オブジェ、そして本人が「手いたずら」と呼ぶ小さな手仕事まで、ジャンルを横断して制作を続けています。</p>
-        <p>黒地に白の細い線を何重にも重ねる線描は、ときに2週間ほどをかけて描かれます。画面には、雪や花、そしてその日の新聞が伝える世の中の気配が、静かに織り込まれています。</p>
-        <p>2022年には「大地の芸術祭」の里 越後妻有2022冬 SNOWART に、雪アート・新潟ユニットの一員として参加。雪国の暮らしと季節を、作品の大切な素材にしています。</p>
+        <p>美術作家。実験空間 Studio Zero 主宰。絵画、オブジェ、そして本人が「手いたずら」と呼ぶ手仕事を制作しています。</p>
+        <p>黒地に白い線を重ねる線描は、1点に2週間ほどかかることもあります。2024年の春には、この線描が20枚ほどたまりました。</p>
+        <p>2022年、「大地の芸術祭」の里 越後妻有2022冬 SNOWART に、雪アート・新潟ユニットの一員として参加しました。雪の壁を掘ってつくる「雪壁ギャラリー」にも作品を出しています。</p>
         <dl class="artist__facts">
           <div><dt>制作</dt><dd>絵画、オブジェ、手いたずら</dd></div>
           <div><dt>主な素材</dt><dd>紙、墨・インク、ボールペン、張り子、ステンレスワイヤー、ジーンズ、新聞紙、杉、胡桃の殻、空き缶 ほか</dd></div>
@@ -314,9 +332,9 @@ const about = layout({
 <section class="section tewaza">
   <div class="container">
     <div class="tewaza__head reveal">
-      <p class="eyebrow">Tewaza — 手いたずら</p>
-      <h2 class="h2">捨てる前に、<br>もうひと手間。</h2>
-      <p>飲み終えた缶、履き古したジーンズ、割った胡桃の殻、余ったステンドグラス。東條の手にかかると、捨てられるはずのものが花になり、バッグになり、小さなオブジェになります。肩の力を抜いた遊びの中に、ものを最後まで大切にする眼差しがあります。</p>
+      <p class="eyebrow">Tewaza</p>
+      <h2 class="h2">手いたずら</h2>
+      <p>飲み終えた缶、履き古したジーンズ、オニグルミの殻、ネックレスの残りのとんぼ玉。東條が「手いたずら」と呼ぶ、身近な素材を使った手仕事です。</p>
     </div>
     <ul class="tewaza__grid">
       ${[
@@ -331,19 +349,6 @@ const about = layout({
   </div>
 </section>
 
-<section class="section section--paper2 values">
-  <div class="container values__grid">
-    ${[
-      ["01", "地方から発信する", "地方の街角にある小さな場所から、作品と企画を通して発信を続けること。"],
-      ["02", "暮らしと地続きに", "季節の行事、地域の門松、雪。暮らしの営みそのものを制作の場にすること。"],
-      ["03", "素材を最後まで", "残りもの、使い古したものに、もう一度かたちと役目を与えること。"],
-    ]
-      .map(
-        ([n, t, d]) => `<article class="value reveal"><p class="value__no">${n}</p><h3 class="value__title">${t}</h3><p>${d}</p></article>`
-      )
-      .join("\n    ")}
-  </div>
-</section>
 `,
 });
 
@@ -364,8 +369,8 @@ const exhibition = layout({
 </section>
 <section class="section section--ink exhibition-statement">
   <div class="container narrow reveal">
-    <p class="statement">マスクが、顔の一部になった年がありました。<br>植物、針金、石膏、ジーンズ、新聞紙 ―<br>身のまわりにある9つの素材で、9つのマスクをつくりました。</p>
-    <p>息をするための隙間、透けて見える輪郭、重ねられた新聞の見出し。ひとつひとつのマスクは、あの時間を生きた私たちの記録でもあります。17年間にわたり企画展を開いてきた Studio Zero の、最新の企画展です。</p>
+    <p class="statement">植物、針金、石膏、ジーンズ、新聞紙。<br>身のまわりの素材でつくったマスク9点。</p>
+    <p>2020年、マスクが毎日の持ち物になった年に制作しました。Studio Zero が17年間続けてきた企画展のひとつです。</p>
   </div>
 </section>
 <section class="section section--ink">
@@ -499,7 +504,7 @@ const activitiesPage = layout({
   <div class="container">
     <p class="eyebrow">Activities</p>
     <h1 class="page-hero__title">活動記録</h1>
-    <p class="page-hero__sub">展覧会への参加、地域とのかかわり、制作の節目。</p>
+    <p class="page-hero__sub">展覧会への参加や、地域での活動の記録です。</p>
   </div>
 </section>
 <section class="section section--tight">
@@ -546,7 +551,7 @@ const contact = layout({
   <div class="container">
     <p class="eyebrow">Contact</p>
     <h1 class="page-hero__title">お問い合わせ</h1>
-    <p class="page-hero__sub">作品の購入、展示やワークショップのご相談、取材など、お気軽にご連絡ください。</p>
+    <p class="page-hero__sub">作品の購入、展示やワークショップのご相談、取材などはこちらから。</p>
   </div>
 </section>
 <section class="section section--tight">
@@ -554,7 +559,7 @@ const contact = layout({
     <div class="contact__channels">
       <a class="channel reveal" href="${site.instagram}" target="_blank" rel="noopener">
         <span class="channel__icon">${icon.instagram}</span>
-        <span class="channel__body"><span class="channel__name">Instagram</span><span class="channel__desc">${site.instagramHandle} へダイレクトメッセージ（DM）をお送りください。いちばん確実な連絡方法です。</span></span>
+        <span class="channel__body"><span class="channel__name">Instagram</span><span class="channel__desc">${site.instagramHandle} へダイレクトメッセージ（DM）をお送りください。</span></span>
         <span class="channel__arrow">${icon.ext}</span>
       </a>
       <a class="channel reveal" href="${site.facebook}" target="_blank" rel="noopener">
@@ -564,8 +569,8 @@ const contact = layout({
       </a>
     </div>
     <div class="contact__template reveal">
-      <h2 class="h3">メッセージ作成のお手伝い</h2>
-      <p>下の項目を入力すると、そのまま送れる文面ができあがります。コピーして DM に貼り付けてください。入力内容はどこにも送信されません。</p>
+      <h2 class="h3">DM の文面をつくる</h2>
+      <p>項目を入力すると、DM に貼り付ける文面ができます。入力した内容はどこにも送信されません。</p>
       <form class="template-form" data-template-form>
         <label>お名前<input name="name" autocomplete="name" required></label>
         <label>ご用件
@@ -588,9 +593,9 @@ const contact = layout({
     </div>
     <div class="faq reveal">
       <h2 class="h3">よくあるご質問</h2>
-      <details><summary>作品は購入できますか？</summary><p>企画展『-MASUKU-』の作品は各作品ページに価格を掲載しています。そのほかの作品についても、まずはお気軽にお問い合わせください。</p></details>
+      <details><summary>作品は購入できますか？</summary><p>企画展『-MASUKU-』の作品は各作品ページに価格を掲載しています。そのほかの作品についても、お問い合わせください。</p></details>
       <details><summary>スタジオを見学できますか？</summary><p>展示の開催時期や見学の可否は時期によって異なります。ご希望の日程とあわせてご相談ください。</p></details>
-      <details><summary>ワークショップや展示の依頼はできますか？</summary><p>内容・時期・会場などをお知らせいただければ、個別にご相談させていただきます。</p></details>
+      <details><summary>ワークショップや展示の依頼はできますか？</summary><p>内容・時期・会場などをお知らせいただければ、個別にご相談します。</p></details>
     </div>
   </div>
 </section>
